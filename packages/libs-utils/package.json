@@ -1,0 +1,30 @@
+{
+  "name": "@mono/libs-utils",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "exports": {
+    "./rxjs": {
+      "import": "./dist/rxjs/index.js",
+      "types": "./dist/rxjs/index.d.ts"
+    },
+    "./polyfill": {
+      "import": "./dist/polyfill/index.js",
+      "types": "./dist/polyfill/index.d.ts"
+    },
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "sideEffects": [
+    "./dist/polyfill/index.js"
+  ],
+  "dependencies": {
+    "rxjs": "^7.8.1"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "defaultBase": "master",
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": [
+          "tsc-check",
+          "build"
+        ]
+      }
+    }
+  },
+  "namedInputs": {
+    "src": [
+      "{projectRoot}/src/**/*"
+    ],
+    "dist": [
+      "{projectRoot}/dist/**/*"
+    ]
+  },
+  "targetDefaults": {
+    "tsc-check": {
+      "inputs": [
+        "src"
+      ],
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": []
+    },
+    "build": {
+      "inputs": [
+        "src"
+      ],
+      "dependsOn": [
+        "tsc-check",
+        "^build"
+      ],
+      "outputs": [
+        "dist"
+      ]
+    },
+    "start": {
+      "dependsOn": [
+        "^build"
+      ]
+    }
+  }
+}

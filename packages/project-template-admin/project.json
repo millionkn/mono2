@@ -1,0 +1,25 @@
+{
+  "targets": {
+    "tsc-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit",
+        "cwd": "./packages/project-template-admin"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite",
+        "cwd": "./packages/project-template-admin"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite build",
+        "cwd": "./packages/project-template-admin"
+      }
+    }
+  }
+}

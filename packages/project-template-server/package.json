@@ -1,0 +1,33 @@
+{
+  "name": "@mono/project-template-server",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "start": "nx run project-template-server:start",
+    "start-debug": "nx run project-template-server:start:debug",
+    "build": "nx run project-template-server:build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "sideEffects": false,
+  "dependencies": {
+    "@mono/libs-utils": "workspace:^",
+    "@trpc/server": "^10.31.0",
+    "dayjs": "^1.11.8",
+    "fastify": "^4.18.0",
+    "pino-pretty": "^10.0.0",
+    "rxjs": "^7.8.1",
+    "typeorm": "^0.3.17",
+    "zod": "^3.21.4"
+  }
+}
