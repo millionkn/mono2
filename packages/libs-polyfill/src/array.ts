@@ -1,5 +1,4 @@
-export { }
-
+export {}
 declare global {
   interface Array<T> {
     filterMap<R>(fun: (item: T, index: number, arr: T[]) => R | null): R[]
@@ -30,8 +29,6 @@ declare global {
     ): { [key in K]: V }
 
     getRandom(): T
-    pipeLine: <R>(pipe: (e: this) => R) => PipeLine<R>
-    pipe: <R>(pipe: (e: this) => R) => R
 
     dedup<K>(key: (obj: T) => K): T[]
   }

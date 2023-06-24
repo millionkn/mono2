@@ -4,8 +4,9 @@
     "target": "ESNext",
     "rootDir": "src",
     "outDir": "dist",
-    "moduleResolution": "NodeNext",
-    "composite": true,
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
     "resolveJsonModule": true,
     "removeComments": true,
     "esModuleInterop": false,
@@ -20,13 +21,14 @@
       "ESNext"
     ],
     "types": [],
+    "baseUrl": "./",
     "paths": {
       "@src/*": [
-        "./src/*"
+        "src/*"
       ]
     }
   },
   "include": [
     "src/**/*.ts",
-  ]
+  ],
 }

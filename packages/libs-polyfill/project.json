@@ -3,7 +3,7 @@
     "tsc-check":{
       "executor": "nx:run-commands",
       "options": {
-        "cwd": "./packages/libs-utils",
+        "cwd": "./packages/libs-polyfill",
         "command": "tsc --noEmit"
       }
     }

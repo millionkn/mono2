@@ -1,5 +1,5 @@
 {
-  "name": "@mono/libs-utils",
+  "name": "@mono/libs-rxjs-operator",
   "private": true,
   "version": "1.0.0",
   "description": "",
@@ -13,5 +13,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "sideEffects": false
+  "sideEffects": false,
+  "dependencies": {
+    "rxjs": "^7.8.1"
+  }
 }

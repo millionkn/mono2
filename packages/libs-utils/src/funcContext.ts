@@ -1,4 +1,4 @@
-import { MultipleMap } from "./multipleMap.js"
+import { MultipleMap } from "./multipleMap.ts"
 
 export class FuncContext {
   private cache1 = new MultipleMap<any>()

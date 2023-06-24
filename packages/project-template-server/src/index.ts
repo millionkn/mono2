@@ -1,6 +1,6 @@
-import '@mono/libs-utils/polyfill';
+import '@mono/libs-polyfill';
 import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
-import { appRouter } from "./router/index.js"
+import { appRouter } from "./router"
 import fastify from 'fastify';
 import { exit } from 'process';
 

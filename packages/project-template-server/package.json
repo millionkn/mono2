@@ -4,7 +4,6 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "./dist/index.js",
   "module": "./dist/index.js",
   "exports": {
     ".": {
@@ -12,15 +11,17 @@
     }
   },
   "scripts": {
-    "start": "nx run project-template-server:start",
-    "start-debug": "nx run project-template-server:start:debug",
-    "build": "nx run project-template-server:build"
+    "start": "nx run start project-template-server",
+    "start:debug": "nx run start project-template-server --configuration=debug",
+    "build": "nx run build project-template-server"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "sideEffects": false,
   "dependencies": {
+    "@mono/libs-polyfill": "workspace:^",
+    "@mono/libs-rxjs-operator": "workspace:^",
     "@mono/libs-utils": "workspace:^",
     "@trpc/server": "^10.31.0",
     "dayjs": "^1.11.8",

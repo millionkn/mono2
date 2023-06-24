@@ -1,5 +1,5 @@
 {
-  "name": "@mono/libs-utils",
+  "name": "@mono/libs-polyfill",
   "private": true,
   "version": "1.0.0",
   "description": "",
@@ -12,6 +12,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "sideEffects": false
+  "license": "ISC"
 }
