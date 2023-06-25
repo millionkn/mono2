@@ -7,6 +7,7 @@ import dotEnv from 'dotenv';
 import dotEnvExpand from 'dotenv-expand';
 import { TaskMode } from './task.ts';
 import { normalizePath } from '../tools/path.ts';
+import { readJsonSync } from 'fs-extra';
 
 export const WorkspaceRoot = import.meta.url
   .pipe((str) => fileURLToPath(str))
@@ -88,4 +89,27 @@ export function getProjectEnv(projectName: string) {
       if (result.error) { throw result.error }
       return parsed
     })
+}
+
+const projectDeps: {
+  [projectName: string]: {
+    thiryDependencies: {
+      [depName: string]: string,
+    },
+    monoDependencies: string[]
+  }
+} = {}
+export function getProjectDeps(projectName: string) {
+  const filePath = path.resolve(getProjectRoot(projectName), 'package.json')
+  const json = readJsonSync(filePath, { throws: false })
+  if (!json || typeof json !== 'object') {
+    throw new Error(`'${filePath}' not exists or is not a valid json`)
+  }
+  const deps = json['dependencies'] ?? {}
+  return projectDeps[projectName] ||= {
+    monoDependencies: Object.keys(deps).filter((e) => e.startsWith('@mono/')),
+    thiryDependencies: Object.entries(deps)
+      .filter(([k]) => !k.startsWith('@mono/'))
+      .asObject(([a]) => a, ([, b]) => String(b).valueOf())
+  }
 }
