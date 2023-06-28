@@ -7,7 +7,7 @@ import dotEnv from 'dotenv';
 import dotEnvExpand from 'dotenv-expand';
 import { TaskMode } from './task.ts';
 import { normalizePath } from '../tools/path.ts';
-import { readJsonSync } from 'fs-extra';
+import fse from 'fs-extra';
 
 export const WorkspaceRoot = import.meta.url
   .pipe((str) => fileURLToPath(str))
@@ -101,7 +101,7 @@ const projectDeps: {
 } = {}
 export function getProjectDeps(projectName: string) {
   const filePath = path.resolve(getProjectRoot(projectName), 'package.json')
-  const json = readJsonSync(filePath, { throws: false })
+  const json = fse.readJsonSync(filePath, { throws: false })
   if (!json || typeof json !== 'object') {
     throw new Error(`'${filePath}' not exists or is not a valid json`)
   }

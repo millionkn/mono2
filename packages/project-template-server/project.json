@@ -10,8 +10,7 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsc",
-        "cwd": "./packages/project-template-server"
+        "command": "pnpm exec ts-node-esm ./scripts/src/build.ts"
       }
     },
     "start": {

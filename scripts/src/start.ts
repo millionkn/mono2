@@ -12,16 +12,16 @@ import { debounceTime, fromEvent, map, merge } from 'rxjs';
 
 const projectRoot = getProjectRoot(TaskProject)
 const projectEnv = getProjectEnv(TaskProject)
-const Mono_start_index = path.resolve(projectRoot, projectEnv['Mono_start_index'] || 'src/index.ts')
+const Mono_project_index = path.resolve(projectRoot, projectEnv['Mono_project_index'] || 'src/index.ts')
 
-const fileStat = await stat(Mono_start_index).catch(() => {
-  throw new Error(`'${Mono_start_index}' not exists`)
+const fileStat = await stat(Mono_project_index).catch(() => {
+  throw new Error(`'${Mono_project_index}' not exists`)
 })
 if (fileStat.isDirectory()) {
-  throw new Error(`'${Mono_start_index}' is a directory`)
+  throw new Error(`'${Mono_project_index}' is a directory`)
 }
 
-const { tsconfigFile, tsconfig } = await tsconfck.parse(Mono_start_index)
+const { tsconfigFile, tsconfig } = await tsconfck.parse(Mono_project_index)
 const TS_NODE_PROJECT = path.relative(WorkspaceRoot, tsconfigFile).replaceAll('\\', '/')
 
 const scriptsRoot = getProjectRoot('scripts')
@@ -30,7 +30,7 @@ const loaderPath = relative(projectRoot, path.resolve(scriptsRoot, 'src', 'tools
 console.clear()
 console.log(`${dayjs().format('HH:mm:ss')}:starting dev server...`)
 
-const command = `node ${projectEnv['Mono_script_debug'] === 'true' ? '--inspect' : ''} --no-warnings --loader ts-node/esm --loader ${loaderPath} --experimental-specifier-resolution=node ${Mono_start_index}`
+const command = `node ${projectEnv['Mono_script_debug'] === 'true' ? '--inspect' : ''} --no-warnings --loader ts-node/esm --loader ${loaderPath} --experimental-specifier-resolution=node ${Mono_project_index}`
 
 let child = execaCommand(command, {
   cwd: projectRoot,

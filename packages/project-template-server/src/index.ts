@@ -1,29 +1,39 @@
+
 import '@mono/libs-polyfill';
-import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
-import { appRouter } from "./router"
-import fastify from 'fastify';
-import { exit } from 'process';
+import { a,BB } from '@src/test'
+const z = await import('@src/test')
+import CC = BB
 
-export type AppRouter = typeof appRouter
+CC.aa
+type A = typeof a
+// export type AppRouter = typeof appRouter
+console.log(a as A,z.a as A)
 
-const server = fastify({
-  maxParamLength: 5000,
-  logger: {
-    transport: {
-      target: 'pino-pretty',
-      options: {
-        colorize: true
-      }
-    }
-  },
-});
-server.register(fastifyTRPCPlugin, {
-  prefix: '/trpc',
-  trpcOptions: { router: appRouter },
-});
-server.listen({ port: 3000 }, (err) => {
-  if (err) {
-    server.log.error(err)
-    exit(1)
-  }
-});
+// import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
+// import { appRouter } from "./router"
+// import fastify from 'fastify';
+// import { exit } from 'process';
+
+
+
+// const server = fastify({
+//   maxParamLength: 5000,
+//   logger: {
+//     transport: {
+//       target: 'pino-pretty',
+//       options: {
+//         colorize: true
+//       }
+//     }
+//   },
+// });
+// server.register(fastifyTRPCPlugin, {
+//   prefix: '/trpc',
+//   trpcOptions: { router: appRouter },
+// });
+// server.listen({ port: 3000 }, (err) => {
+//   if (err) {
+//     server.log.error(err)
+//     exit(1)
+//   }
+// });
