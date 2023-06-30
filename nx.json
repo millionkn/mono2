@@ -6,7 +6,7 @@
       "options": {
         "cacheableOperations": [
           "tsc-check",
-          "build"
+          "xxbuild"
         ]
       }
     }

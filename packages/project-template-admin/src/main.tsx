@@ -1,4 +1,4 @@
-import '@mono/libs-utils/polyfill'
+import {} from '@mono/libs-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { App } from '@src/app.tsx'

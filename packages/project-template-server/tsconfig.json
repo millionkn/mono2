@@ -4,7 +4,7 @@
     "target": "ESNext",
     "rootDir": "src",
     "outDir": "dist",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "resolveJsonModule": true,
@@ -31,6 +31,6 @@
     }
   },
   "include": [
-    "src/**/*.ts",
+    "src/index.ts",
   ],
 }

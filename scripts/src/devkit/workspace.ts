@@ -8,6 +8,8 @@ import dotEnvExpand from 'dotenv-expand';
 import { TaskMode } from './task.ts';
 import { normalizePath } from '../tools/path.ts';
 import fse from 'fs-extra';
+import ts from 'typescript';
+import * as tsConfck from 'tsconfck';
 
 export const WorkspaceRoot = import.meta.url
   .pipe((str) => fileURLToPath(str))
@@ -111,5 +113,41 @@ export function getProjectDeps(projectName: string) {
     thiryDependencies: Object.entries(deps)
       .filter(([k]) => !k.startsWith('@mono/'))
       .asObject(([a]) => a, ([, b]) => String(b).valueOf())
+  }
+}
+
+const projectTsConfig: {
+  [projectName: string]: ts.CompilerOptions
+} = {}
+export function getProjectTsConfig(projectName: string) {
+  return projectTsConfig[projectName] ||= projectName
+    .pipeLine((s) => path.resolve(getProjectRoot(s), 'tsconfig.json'))
+    .pipeLine((fileName) => {
+      const text = ts.sys.readFile(fileName);
+      if (!text) { throw new Error() }
+      return ts.parseConfigFileTextToJson(fileName, text);
+    }).unpack((e) => {
+      if (e.error) { throw new Error() }
+      if (!e.config) { throw new Error() }
+      return e.config
+    })
+}
+
+export async function getTsResolver(projectName: string) {
+  const compilerOptions = getProjectTsConfig(projectName)
+  const host = ts.createCompilerHost(compilerOptions, false);
+  return (from: string, importTarget: string): null | string => {
+    //todo
+    const resolveModule = ts
+      .resolveModuleName(importTarget, from, compilerOptions, host)
+      .resolvedModule
+    if (!resolveModule || resolveModule.isExternalLibraryImport) { return null }
+    if (!['.ts', '.tsx'].includes(resolveModule.extension)) { return null }
+    return path.relative(from, resolveModule.resolvedFileName)
+      .replaceAll('\\', '/')
+      .pipe((result) => result.startsWith('.') ? result : `./${result}`)
+      .replace(/\.ts$/, '.js')
+      .replace(/\.tsx$/, '.jsx')
+      .pipe((result) => result === importTarget ? null : result)
   }
 }

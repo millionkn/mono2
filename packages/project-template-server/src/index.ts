@@ -1,5 +1,6 @@
+import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
+import {mergePipeLike} from '@mono/libs-polyfill';
 
-import '@mono/libs-polyfill';
 import { a,BB } from '@src/test'
 const z = await import('@src/test')
 import CC = BB
@@ -7,9 +8,9 @@ import CC = BB
 CC.aa
 type A = typeof a
 // export type AppRouter = typeof appRouter
-console.log(a as A,z.a as A)
+console.log(a as A,z.a as A,!!fastifyTRPCPlugin,!!mergePipeLike)
 
-// import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
+
 // import { appRouter } from "./router"
 // import fastify from 'fastify';
 // import { exit } from 'process';

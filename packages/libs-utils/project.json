@@ -1,10 +1,10 @@
 {
   "targets": {
-    "tsc-check":{
+    "build": {
       "executor": "nx:run-commands",
       "options": {
         "cwd": "./packages/libs-utils",
-        "command": "tsc --noEmit"
+        "command": "tsc"
       }
     }
   }
