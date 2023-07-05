@@ -3,8 +3,7 @@
     "build":{
       "executor": "nx:run-commands",
       "options": {
-        "cwd": "./packages/libs-rxjs-operator",
-        "command": "tsc"
+        "command": "pnpm exec ts-node-esm ./scripts/src/build.ts"
       }
     }
   }

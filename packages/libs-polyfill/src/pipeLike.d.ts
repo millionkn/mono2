@@ -25,6 +25,11 @@ declare global {
         pipeTap: (tap: (e: string) => void) => string;
         pipe: <R>(pipe: (e: string) => R) => R;
     }
+    interface Boolean {
+        pipeLine: <R>(pipe: (e: boolean) => R) => PipeLine<R>;
+        pipeTap: (tap: (e: boolean) => void) => boolean;
+        pipe: <R>(pipe: (e: boolean) => R) => R;
+    }
     interface Array<T> extends PipeLike {
     }
     interface Map<K, V> extends PipeLike {

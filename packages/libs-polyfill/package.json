@@ -5,6 +5,8 @@
   "description": "",
   "type": "module",
   "module": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "typings": "./src/index.d.ts",
   "exports": {
     ".": {
       "import": "./src/index.js",
@@ -13,5 +15,6 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "sideEffects": true
 }

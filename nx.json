@@ -6,7 +6,7 @@
       "options": {
         "cacheableOperations": [
           "tsc-check",
-          "xxbuild"
+          "build"
         ]
       }
     }
@@ -22,6 +22,7 @@
   "targetDefaults": {
     "tsc-check": {
       "inputs": [
+        "^dist",
         "src"
       ],
       "dependsOn": [
@@ -34,16 +35,10 @@
         "src"
       ],
       "dependsOn": [
-        "tsc-check",
         "^build"
       ],
       "outputs": [
-        "dist"
-      ]
-    },
-    "start": {
-      "dependsOn": [
-        "^build"
+        "{projectRoot}/dist/**/*"
       ]
     }
   }

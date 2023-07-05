@@ -10,6 +10,9 @@
       "types": "./dist/index.d.ts"
     }
   },
+  "scripts": {
+    "build": "nx run build project-template-server"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

@@ -1,5 +1,5 @@
 export {};
-export * from './pipeLike.js';
+import './pipeLike.js';
 import './array.js';
 import './map.js';
 import './math.js';

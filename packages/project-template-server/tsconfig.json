@@ -5,7 +5,7 @@
     "rootDir": "src",
     "outDir": "dist",
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
+    "allowSyntheticDefaultImports": true,
     "noEmit": true,
     "resolveJsonModule": true,
     "removeComments": true,
