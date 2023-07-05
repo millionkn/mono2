@@ -9,6 +9,10 @@ import * as tsconfck from 'tsconfck';
 import watch from "glob-watcher"
 import dayjs from 'dayjs';
 import { debounceTime, fromEvent, map, merge } from 'rxjs';
+import { timer } from "rxjs";
+import ansiEscapes from 'ansi-escapes';
+
+
 
 const projectRoot = getProjectRoot(TaskProject)
 const projectEnv = getProjectEnv(TaskProject)
@@ -52,8 +56,7 @@ merge(
   if (!child.killed || child.exitCode === null) {
     child.kill()
   }
-  console.clear()
-  console.log(`\n${dayjs().format('HH:mm:ss')}:file changed,restart...`)
+  console.log(`${ansiEscapes.clearTerminal}${dayjs().format('HH:mm:ss')}:file changed,restart...`)
 
   child = execaCommand(command, {
     cwd: projectRoot,
