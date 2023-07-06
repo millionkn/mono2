@@ -4,6 +4,8 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
+  "types": "./dist/index.d.ts",
+  "typings": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -11,7 +13,7 @@
     }
   },
   "scripts": {
-    "build": "nx run build project-template-server"
+    "build": "nx run build libs-utils"
   },
   "keywords": [],
   "author": "",

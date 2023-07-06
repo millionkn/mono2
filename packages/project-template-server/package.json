@@ -5,14 +5,16 @@
   "description": "",
   "type": "module",
   "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "typings": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts"
     }
   },
   "scripts": {
-    "start": "nx run start project-template-server",
-    "start:debug": "nx run start project-template-server --configuration=debug",
+    "start": "ts-node-esm ../../scripts/src/start.ts",
+    "start:debug": "ts-node-esm ../../scripts/src/start-debug.ts",
     "build": "nx run build project-template-server"
   },
   "keywords": [],
