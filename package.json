@@ -10,10 +10,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@mono/cli-devkit": "workspace:^",
     "@types/node": "^18.16.16",
     "nx": "^16.4.3",
     "ts-node": "^10.9.1",
-    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.6"
   }
 }

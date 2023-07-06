@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ESNext",
+    "allowJs": true,
+    "moduleResolution": "NodeNext",
+    "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "removeComments": true,
+    "esModuleInterop": false,
+    "alwaysStrict": true,
+    "strict": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "lib": [
+      "ESNext"
+    ],
+    "types": [
+      "node",
+    ],
+  },
+  "include": [
+    "src/**/*.mts",
+    "src/**/*.mjs",
+    "src/**/*.js",
+  ],
+}
