@@ -38,12 +38,12 @@ importers:
       '@types/fs-extra':
         specifier: ^11.0.1
         version: 11.0.1
-      '@types/signale':
-        specifier: ^1.4.4
-        version: 1.4.4
       ansi-escapes:
         specifier: ^6.2.0
         version: 6.2.0
+      chalk:
+        specifier: ^5.3.0
+        version: 5.3.0
       dayjs:
         specifier: ^1.11.8
         version: 1.11.8
@@ -68,9 +68,6 @@ importers:
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
-      signale:
-        specifier: ^1.4.0
-        version: 1.4.0
 
   packages/devkit: {}
 
