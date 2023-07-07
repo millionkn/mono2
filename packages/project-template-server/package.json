@@ -13,9 +13,9 @@
     }
   },
   "scripts": {
-    "start": "ts-node-esm ../../scripts/src/start.ts",
-    "start:debug": "ts-node-esm ../../scripts/src/start-debug.ts",
-    "build": "nx run build project-template-server"
+    "start": "mono-devkit ./src/index.ts",
+    "start:debug": "mono-dev ./src/index.ts debug",
+    "build": "nx-command bui"
   },
   "keywords": [],
   "author": "",
