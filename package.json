@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@mono/cli-devkit": "workspace:^",
     "@types/node": "^18.16.16",
     "nx": "^16.5.0",
     "ts-node": "^10.9.1",

@@ -20,7 +20,6 @@
   "license": "ISC",
   "sideEffects": false,
   "dependencies": {
-    "@mono/cli-devkit": "workspace:^",
     "rxjs": "^7.8.1"
   }
 }

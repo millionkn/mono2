@@ -1,15 +1,19 @@
 import path from "path";
-import { platform } from 'os';
-import * as posix from "path/posix";
-import { cwd } from "process";
 import fse from "fs-extra";
 import dotEnv from 'dotenv';
-import { normalizePath, workspaceRoot } from "./tools";
+import { normalizePath, normalizeRelative, workspaceRoot } from "./tools";
 
 export function getProjectRoot(projectName: string) {
   return projectName
     .pipe((str) => path.resolve(workspaceRoot, `packages`, str))
     .pipe((str) => normalizePath(str))
+}
+
+export function getCwdProjectName() {
+  return process.cwd()
+    .pipe((str) => normalizeRelative(path.resolve(workspaceRoot, 'packages'), str))
+    .pipe((str) => str.split('/')[0])
+    .pipe((str) => str.startsWith('.') ? null : str)
 }
 
 /**
@@ -31,10 +35,11 @@ export function getProjectRoot(projectName: string) {
  */
 export const getProjectEnvFileList = (projectName: string, mode: string) => {
   if (mode === 'local') {
-    throw new Error(
+    console.error(
       `"local" cannot be used as a mode name because it conflicts with ` +
       `the .local postfix for .env files.`,
     )
+    process.exit(1)
   }
   const projectRoot = getProjectRoot(projectName)
   return [
@@ -67,7 +72,8 @@ export function getProjectDeps(projectName: string) {
   const filePath = path.resolve(getProjectRoot(projectName), 'package.json')
   const json = fse.readJsonSync(filePath, { throws: false })
   if (!json || typeof json !== 'object') {
-    throw new Error(`'${filePath}' not exists or is not a valid json`)
+    console.error(`'${filePath}' not exists or is not a valid json`)
+    process.exit(1)
   }
   const deps = json['dependencies'] ?? {}
   return {

@@ -1,17 +1,18 @@
-export interface PipeLine<T> {
-    unpack: {
-        (): T;
-        <R>(pipe: (self: T) => R): R;
-    };
-    pipeLine: <R>(pipe: (self: T) => R) => PipeLine<R>;
-}
-export interface PipeLike {
-    pipeLine: <R>(pipe: (e: this) => R) => PipeLine<R>;
-    pipeTap: (tap: (e: this) => void) => this;
-    pipe: <R>(pipe: (e: this) => R) => R;
-}
-export declare function mergePipeLike(prototype: any): void;
+export { }
 declare global {
+    interface PipeLine<T> {
+        unpack: {
+            (): T;
+            <R>(pipe: (self: T) => R): R;
+        };
+        pipeLine: <R>(pipe: (self: T) => R) => PipeLine<R>;
+        pipeTap: (tap: (e: T) => void) => PipeLine<T>;
+    }
+    interface PipeLike {
+        pipeLine: <R>(pipe: (e: this) => R) => PipeLine<R>;
+        pipeTap: (tap: (e: this) => void) => this;
+        pipe: <R>(pipe: (e: this) => R) => R;
+    }
     interface ObjectConstructor {
         pipeLineFrom<T>(obj: T): PipeLine<T>;
     }

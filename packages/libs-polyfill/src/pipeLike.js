@@ -1,4 +1,4 @@
-export function mergePipeLike(prototype) {
+function mergePipeLike(prototype) {
     prototype.pipe = function (pipe) {
         return pipe(this);
     };
@@ -13,6 +13,10 @@ export function mergePipeLike(prototype) {
 Object.pipeLineFrom = (value) => {
     return {
         unpack: (pipe = (v) => v) => pipe(value),
+        pipeTap: (tap) => {
+            tap(value)
+            return Object.pipeLineFrom(value)
+        },
         pipeLine: (pipe) => Object.pipeLineFrom(pipe(value))
     };
 };

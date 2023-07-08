@@ -33,15 +33,3 @@ export const workspaceRoot = import.meta.url
   .pipe((str) => fileURLToPath(str))
   .pipe((str) => path.resolve(str, '../../../..'))
   .pipe((str) => normalizePath(str))
-
-export const cwdProjectName = process.cwd()
-  .pipe((str) => normalizeRelative(path.resolve(workspaceRoot, 'packages'), str))
-  .pipe((str) => str.split('/')[0])
-  .pipe((str) => {
-    if (str.startsWith('.')) { throw new Error('cwd not in project') }
-    return str
-  })
-
-export const projectRoot = path
-  .resolve(workspaceRoot, 'packages', cwdProjectName)
-  .pipe((str) => normalizePath(str))
