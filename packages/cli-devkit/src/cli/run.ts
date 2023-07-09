@@ -3,8 +3,8 @@ import { esmCommand } from "../tools";
 import { execaCommand } from 'execa'
 import fse from "fs-extra";
 
-export function runWrapper(cac: CAC) {
-  cac
+export function runWrapper() {
+  return (cac: CAC) => cac
     .command('run <script>', `run a esm script`)
     .option(`--debug`, `with '--inspect' flag`)
     .option('--mode <mode>', `if set,will load '.env.[mode]' or '.env.[mode].local'`)

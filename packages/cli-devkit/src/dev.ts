@@ -1,10 +1,10 @@
 import * as path from "path";
 import { watch, rollup } from "rollup";
 import typescript from 'typescript';
-import { cwdProjectName, projectRoot, useImportDefault } from "../tools.js";
+import { cwdProjectName, projectRoot, useImportDefault } from "./tools";
 import ora from 'ora';
-import { resolveDeps } from "../plugins/resolve-deps.js";
-import { watchEnvFile } from "../plugins/watch-env-file.js";
+import { resolveDeps } from "./plugins/resolve-deps";
+import { watchEnvFile } from "./plugins/watch-env-file";
 import ansiEscapes from 'ansi-escapes';
 import dayjs from "dayjs";
 import chalk from 'chalk';

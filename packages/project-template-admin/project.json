@@ -6,20 +6,6 @@
         "cwd": "./packages/project-template-admin",
         "command": "tsc --noEmit"
       }
-    },
-    "start": {
-      "executor": "nx:run-commands",
-      "options": {
-        "cwd": "./packages/project-template-admin",
-        "command": "vite"
-      }
-    },
-    "build": {
-      "executor": "nx:run-commands",
-      "options": {
-        "cwd": "./packages/project-template-admin",
-        "command": "vite build"
-      }
     }
   }
 }

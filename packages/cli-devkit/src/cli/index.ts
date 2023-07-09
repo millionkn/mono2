@@ -1,34 +1,20 @@
 import '@mono/libs-polyfill';
-import fse from "fs-extra";
-import path from 'path';
-import process from "process";
-import { fileURLToPath } from 'url';
-import { execaCommand } from 'execa';
-import { esmCommand } from '../tools';
 import { cac } from 'cac';
 import { buildWrapper } from './build';
 import { runWrapper } from './run';
+import { watchWrapper } from './watch';
+import { fromEvent, map, tap } from 'rxjs';
 
+const press$ = Object.pipeLineFrom(process.stdin)
+  .pipeTap((stdin) => stdin.setRawMode(true))
+  .pipeTap((stdin) => stdin.setEncoding('utf-8'))
+  .unpack((stdin) => fromEvent(stdin, 'data'))
+  .pipe(map((buffer) => String(buffer)))
+  .pipe(tap((raw) => ['\x03', '\x04'].includes(raw) && process.exit(1)))
 
 Object
   .pipeLineFrom(cac('mono'))
-  .pipeTap(buildWrapper)
-  .pipeTap(runWrapper)
+  .pipeTap(buildWrapper())
+  .pipeTap(runWrapper())
+  .pipeTap(watchWrapper(press$))
   .unpack((cli) => cli.help().parse())
-
-
-// let [scriptName, ...args] = process.argv.slice(2)
-
-
-// const scriptPath = fileURLToPath(import.meta.url)
-//   .pipe((str) => path.resolve(str, '../scripts', `${scriptName}.ts`))
-
-// const stat = fse.statSync(scriptPath, { throwIfNoEntry: false })
-// if (!stat) {
-//   console.error(`no script '${scriptName}',read 'mono --help'`)
-//   process.exit(1)
-// }
-
-// const child = execaCommand([esmCommand(scriptPath), ...args].join(' '), {
-//   stdio: 'inherit',
-// })

@@ -2,27 +2,28 @@ import * as path from "path";
 import { rollup } from "rollup";
 import typescript from 'typescript';
 import { cwd, exit } from "process";
-import { useImportDefault } from "./tools.js";
+import { useImportDefault } from "./tools";
 import ora from 'ora';
-import { resolveDeps } from "./plugins/resolve-deps.js";
-import { getProjectEnv, getProjectRoot } from "./getProject.js";
+import { resolveDeps } from "./plugins/resolve-deps";
+import { getProjectRoot } from "./getProject";
+import { globSync } from 'glob';
 
 const tscPlugin = await import('rollup-plugin-typescript2').then(useImportDefault())
 const resolvePlugin = await import('@rollup/plugin-node-resolve').then(useImportDefault())
 
-export async function buildProject(options: {
-  projectName: string,
-  inputFile: string[],
-  mode: string,
-}) {
-  const projectRoot = getProjectRoot(options.projectName);
-  const projectEnv = getProjectEnv(options.projectName, options.mode);//todo
-  const spinner = ora(`build project '${options.projectName}'`).start();
+export async function buildProject(projectName: string) {
+  const projectRoot = getProjectRoot(projectName);
+  const spinner = ora(`build project '${projectName}'`).start();
   try {
     const rollupBuild = await rollup({
-      input: options.inputFile,
+      input: globSync([
+        getProjectRoot(projectName, `src/**/*.ts`),
+        getProjectRoot(projectName, `src/**/*.tsx`),
+        getProjectRoot(projectName, `src/**/*.js`),
+        getProjectRoot(projectName, `src/**/*.jsx`),
+      ]),
       plugins: [
-        resolveDeps(),
+        resolveDeps(projectName),
         resolvePlugin({
           rootDir: projectRoot,
         }),

@@ -3,9 +3,9 @@ import fse from "fs-extra";
 import dotEnv from 'dotenv';
 import { normalizePath, normalizeRelative, workspaceRoot } from "./tools";
 
-export function getProjectRoot(projectName: string) {
+export function getProjectRoot(projectName: string, ...child: string[]) {
   return projectName
-    .pipe((str) => path.resolve(workspaceRoot, `packages`, str))
+    .pipe((str) => path.resolve(workspaceRoot, `packages`, str, ...child))
     .pipe((str) => normalizePath(str))
 }
 
@@ -69,7 +69,7 @@ export function getProjectEnv(projectName: string, mode: string) {
 }
 
 export function getProjectDeps(projectName: string) {
-  const filePath = path.resolve(getProjectRoot(projectName), 'package.json')
+  const filePath = path.resolve(getProjectRoot(projectName, 'package.json'))
   const json = fse.readJsonSync(filePath, { throws: false })
   if (!json || typeof json !== 'object') {
     console.error(`'${filePath}' not exists or is not a valid json`)
