@@ -84,6 +84,15 @@ importers:
         specifier: ^7.8.1
         version: 7.8.1
 
+  packages/libs-db-scope:
+    dependencies:
+      '@mono/libs-polyfill':
+        specifier: workspace:^
+        version: link:../libs-polyfill
+      typeorm:
+        specifier: ^0.3.17
+        version: 0.3.17(ts-node@10.9.1)
+
   packages/libs-polyfill: {}
 
   packages/libs-rxjs-operator:

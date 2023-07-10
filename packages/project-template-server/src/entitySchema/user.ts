@@ -1,6 +1,6 @@
 import { EntitySchema } from "typeorm";
 
-export const UserEntity = new EntitySchema<{
+export const UserEntitySchema = new EntitySchema<{
   id: string,
   name: string,
 }>({
