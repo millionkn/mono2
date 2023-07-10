@@ -1,16 +1,16 @@
 import { CAC } from "cac";
 import { getCwdProjectName } from "../getProject";
-import { buildProject } from "../buildProject";
+import { rollupProject } from "../rollupProject";
 
-export function buildWrapper() {
+export function rollupWrapper() {
   return (cac: CAC) => cac
-    .command('build [project]', `build project with rollup,default find project in current cwd`)
+    .command('rollup [project]', `rollup project,default find project in current cwd`)
     .action((rawProjectName: string | undefined) => {
       const projectName = rawProjectName ?? getCwdProjectName()
       if (!projectName) {
         console.error(`cwd not in project,please set a project`)
         process.exit(1)
       }
-      buildProject(projectName)
+      rollupProject(projectName)
     })
 }

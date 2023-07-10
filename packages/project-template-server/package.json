@@ -13,9 +13,9 @@
     }
   },
   "scripts": {
-    "start": "mono-devkit ./src/index.ts",
-    "start:debug": "mono-dev ./src/index.ts debug",
-    "build": "nx-command bui"
+    "start": "mono watch",
+    "start:debug": "mono --debug watch",
+    "pre-build": "mono nx-run pre-build"
   },
   "keywords": [],
   "author": "",

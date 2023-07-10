@@ -13,7 +13,7 @@
     }
   },
   "scripts": {
-    "build": "nx run build libs-utils"
+    "pre-build": "mono nx-run pre-build"
   },
   "keywords": [],
   "author": "",

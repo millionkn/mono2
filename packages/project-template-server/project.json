@@ -3,14 +3,13 @@
     "tsc-check": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsc --noEmit",
-        "cwd": "./packages/project-template-server"
+        "command": "pnpm exec mono nx-cwd tsc --noEmit"
       }
     },
-    "build": {
+    "pre-build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "pnpm exec ts-node-esm ./scripts/src/build.ts"
+        "command": "pnpm exec mono nx-cwd pnpm exec mono rollup"
       }
     }
   }

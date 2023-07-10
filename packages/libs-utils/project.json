@@ -1,9 +1,9 @@
 {
   "targets": {
-    "build": {
+    "pre-build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "pnpm exec ts-node-esm ./scripts/src/build.ts"
+        "command": "pnpm exec mono nx-cwd pnpm exec mono rollup"
       }
     }
   }

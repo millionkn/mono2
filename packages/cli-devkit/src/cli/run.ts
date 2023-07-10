@@ -5,7 +5,7 @@ import fse from "fs-extra";
 
 export function runWrapper() {
   return (cac: CAC) => cac
-    .command('run <script>', `run a esm script`)
+    .command('run-esm <script>', `run a esm script`)
     .option(`--debug`, `with '--inspect' flag`)
     .option('--mode <mode>', `if set,will load '.env.[mode]' or '.env.[mode].local'`)
     .action(async (scriptPath: string, options: { '--': string[], mode: string | undefined, debug: boolean | undefined }) => {

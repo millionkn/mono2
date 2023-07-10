@@ -6,6 +6,7 @@
       "options": {
         "cacheableOperations": [
           "tsc-check",
+          "pre-build",
           "build"
         ]
       }
@@ -26,16 +27,28 @@
         "src"
       ],
       "dependsOn": [
-        "^build"
+        "^pre-build"
       ],
       "outputs": []
+    },
+    "pre-build": {
+      "inputs": [
+        "src"
+      ],
+      "dependsOn": [
+        "^pre-build"
+      ],
+      "outputs": [
+        "{projectRoot}/dist/**/*"
+      ]
     },
     "build": {
       "inputs": [
         "src"
       ],
       "dependsOn": [
-        "^build"
+        "pre-build",
+        "^pre-build"
       ],
       "outputs": [
         "{projectRoot}/dist/**/*"

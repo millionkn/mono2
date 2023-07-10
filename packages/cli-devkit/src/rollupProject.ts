@@ -11,7 +11,7 @@ import { globSync } from 'glob';
 const tscPlugin = await import('rollup-plugin-typescript2').then(useImportDefault())
 const resolvePlugin = await import('@rollup/plugin-node-resolve').then(useImportDefault())
 
-export async function buildProject(projectName: string) {
+export async function rollupProject(projectName: string) {
   const projectRoot = getProjectRoot(projectName);
   const spinner = ora(`build project '${projectName}'`).start();
   try {

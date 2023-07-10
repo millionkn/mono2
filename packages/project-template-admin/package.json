@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "vite",
-    "build": "vite build"
+    "start": "mono nx-run pre-build && vite",
+    "build": "mono nx-run pre-build && mono nx-run tsc-check && vite build"
   },
   "dependencies": {
     "@mono/libs-polyfill": "workspace:^",
