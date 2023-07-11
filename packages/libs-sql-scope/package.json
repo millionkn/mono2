@@ -1,5 +1,5 @@
 {
-  "name": "@mono/libs-rdb-scope",
+  "name": "@mono/libs-sql-scope",
   "private": true,
   "version": "1.0.0",
   "description": "",

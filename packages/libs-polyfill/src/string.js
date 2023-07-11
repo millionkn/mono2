@@ -1,4 +1,7 @@
 String.prototype.asNumber = function () {
     return Number(this || NaN).asNumber();
 };
-export {};
+String.prototype.isOneOf = function (values) {
+    return [...values].includes(this)
+}
+export { };

@@ -1,6 +1,9 @@
 import { EntitySchema } from "typeorm";
+import { entitySchemaLoaderArr } from "../dataSource";
 
-export const UserEntitySchema = new EntitySchema<{
+entitySchemaLoaderArr.push(() => PersonEntitySchema)
+
+export const PersonEntitySchema = new EntitySchema<{
   id: string,
   name: string,
 }>({
@@ -16,3 +19,4 @@ export const UserEntitySchema = new EntitySchema<{
     },
   },
 })
+

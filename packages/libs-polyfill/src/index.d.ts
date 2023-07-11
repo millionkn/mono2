@@ -1,6 +1,7 @@
 export {};
 import './pipeLike.js';
 import './array.js';
+import './obj.js';
 import './map.js';
 import './math.js';
 import './number.js';
