@@ -33,6 +33,7 @@
     },
     "pre-build": {
       "inputs": [
+        "^dist",
         "src"
       ],
       "dependsOn": [
@@ -44,6 +45,7 @@
     },
     "build": {
       "inputs": [
+        "^dist",
         "src"
       ],
       "dependsOn": [
