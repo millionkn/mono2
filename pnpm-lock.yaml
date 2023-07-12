@@ -84,15 +84,6 @@ importers:
         specifier: ^7.8.1
         version: 7.8.1
 
-  packages/libs-db-scope:
-    dependencies:
-      '@mono/libs-polyfill':
-        specifier: workspace:^
-        version: link:../libs-polyfill
-      typeorm:
-        specifier: ^0.3.17
-        version: 0.3.17(ts-node@10.9.1)
-
   packages/libs-polyfill: {}
 
   packages/libs-rxjs-operator:
@@ -4694,84 +4685,6 @@ packages:
       mkdirp: 2.1.6
       mysql2: 3.5.1
       pg: 8.11.1
-      reflect-metadata: 0.1.13
-      sha.js: 2.4.11
-      ts-node: 10.9.1(@types/node@18.16.16)(typescript@5.1.6)
-      tslib: 2.5.3
-      uuid: 9.0.0
-      yargs: 17.7.2
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-  /typeorm@0.3.17(ts-node@10.9.1):
-    resolution: {integrity: sha512-UDjUEwIQalO9tWw9O2A4GU+sT3oyoUXheHJy4ft+RFdnRdQctdQ34L9SqE2p7LdwzafHx1maxT+bqXON+Qnmig==}
-    engines: {node: '>= 12.9.0'}
-    hasBin: true
-    peerDependencies:
-      '@google-cloud/spanner': ^5.18.0
-      '@sap/hana-client': ^2.12.25
-      better-sqlite3: ^7.1.2 || ^8.0.0
-      hdb-pool: ^0.1.6
-      ioredis: ^5.0.4
-      mongodb: ^5.2.0
-      mssql: ^9.1.1
-      mysql2: ^2.2.5 || ^3.0.1
-      oracledb: ^5.1.0
-      pg: ^8.5.1
-      pg-native: ^3.0.0
-      pg-query-stream: ^4.0.0
-      redis: ^3.1.1 || ^4.0.0
-      sql.js: ^1.4.0
-      sqlite3: ^5.0.3
-      ts-node: ^10.7.0
-      typeorm-aurora-data-api-driver: ^2.0.0
-    peerDependenciesMeta:
-      '@google-cloud/spanner':
-        optional: true
-      '@sap/hana-client':
-        optional: true
-      better-sqlite3:
-        optional: true
-      hdb-pool:
-        optional: true
-      ioredis:
-        optional: true
-      mongodb:
-        optional: true
-      mssql:
-        optional: true
-      mysql2:
-        optional: true
-      oracledb:
-        optional: true
-      pg:
-        optional: true
-      pg-native:
-        optional: true
-      pg-query-stream:
-        optional: true
-      redis:
-        optional: true
-      sql.js:
-        optional: true
-      sqlite3:
-        optional: true
-      ts-node:
-        optional: true
-      typeorm-aurora-data-api-driver:
-        optional: true
-    dependencies:
-      '@sqltools/formatter': 1.2.5
-      app-root-path: 3.1.0
-      buffer: 6.0.3
-      chalk: 4.1.2
-      cli-highlight: 2.1.11
-      date-fns: 2.30.0
-      debug: 4.3.4
-      dotenv: 16.3.1
-      glob: 8.1.0
-      mkdirp: 2.1.6
       reflect-metadata: 0.1.13
       sha.js: 2.4.11
       ts-node: 10.9.1(@types/node@18.16.16)(typescript@5.1.6)

@@ -1,8 +1,8 @@
 import { CAC } from "cac";
 import { normalizePath, workspaceRoot } from "../tools";
 import { execaCommand } from 'execa'
-import { getCwdProjectName, getProjectEnv, getProjectEnvFileList, getProjectRoot } from "../getProject";
-import { Observable, Subject, debounceTime, switchMap } from "rxjs";
+import { getCwdProjectName, getProjectMonoDeepDeps, getProjectEnv, getProjectEnvFileList, getProjectRoot } from "../getProject";
+import { Observable, Subject, combineLatestAll, debounceTime, from, map, mergeMap, startWith, switchMap } from "rxjs";
 import ansiEscapes from "ansi-escapes";
 import ora from "ora";
 import colors from 'picocolors'
@@ -23,6 +23,75 @@ export function watchWrapper() {
         console.error(`cwd not in project,please set a project`)
         process.exit(1)
       }
+      from(getProjectMonoDeepDeps(projectName).concat(projectName)).pipe(
+        map((projectName) => new Observable<string>((subscriber) => {
+          const srcWatcher = globWatch(`src/**`, {
+            cwd: getProjectRoot(projectName),
+          })
+          srcWatcher.on('change', (fileName) => subscriber.next(fileName))
+        }).pipe(
+          debounceTime(400),
+          switchMap(() => new Observable<null | {
+            state: 'building',
+            projectName: string,
+          } | {
+            state: 'error',
+            projectName: string,
+            errMessage: string,
+          }>((subscriber) => {
+            const child = execaCommand(`pnpm exec mono rollup`, {
+              stdio: 'pipe',
+              cwd: getProjectRoot(projectName),
+            })
+            subscriber.next({
+              state: 'building',
+              projectName,
+            })
+            child.then(() => subscriber.next(null)).catch((e) => {
+              const errMessage = e instanceof Error ? e.message : String(e)
+              subscriber.next({
+                state: 'error',
+                projectName,
+                errMessage,
+              })
+            }).finally(() => subscriber.complete())
+            return () => child.kill()
+          })),
+          startWith(null),
+        )),
+        combineLatestAll(),
+        (ob$) => {
+          const spinner = ora()
+          return ob$.pipe(
+            switchMap((buildingStateArr) => {
+              const err = buildingStateArr.find((e) => e?.state === 'error')
+              if (err?.state === 'error') {
+                spinner.stop().clear()
+                console.log(ansiEscapes.clearTerminal)
+                console.log(
+                  colors.cyan(`[${dayjs().format('HH:mm:ss')}]`),
+                  `project ${colors.green(err.projectName)} build failed:\n`,
+                  err.errMessage,
+                )
+                return from([])
+              }
+              const building = buildingStateArr.filter((e) => e?.state === 'building')
+              if (building.length !== 0) {
+                spinner.start(`building project ${building.map((e) => colors.green(e!.projectName)).join(',')}`)
+                return from([])
+              }
+              return new Observable(() => {
+                spinner.stop().clear()
+                console.log(
+                  colors.cyan(`[${dayjs().format('HH:mm:ss')}]`),
+                  `starting...`
+                )
+                
+              })
+            }),
+          )
+        }
+      )
       new Observable<string | null>((subscriber) => {
         const srcWatcher = globWatch(normalizePath(getProjectRoot(projectName, `src/**`)))
         subscriber.next(null)

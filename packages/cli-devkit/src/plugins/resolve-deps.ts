@@ -1,10 +1,10 @@
 import { Plugin } from "rollup";
-import { getProjectDeps } from "../getProject";
+import { getProjectThiryDeps } from "../getProject";
 
 export function resolveDeps(projectName: string): Plugin {
   const deps = projectName
-    .pipeLine((str) => getProjectDeps(str))
-    .unpack((obj) => Object.keys(obj.thiryDependencies))
+    .pipeLine((str) => getProjectThiryDeps(str))
+    .unpack((obj) => Object.keys(obj))
     .map((dep) => dep.split('/'))
   return {
     name: 'resolve-deps',

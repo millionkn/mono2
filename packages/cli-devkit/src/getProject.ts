@@ -68,7 +68,8 @@ export function getProjectEnv(projectName: string, mode: string) {
     .unpack((arr) => Object.fromEntries(arr))
 }
 
-export function getProjectDeps(projectName: string) {
+
+export function getProjectThiryDeps(projectName: string) {
   const filePath = path.resolve(getProjectRoot(projectName, 'package.json'))
   const json = fse.readJsonSync(filePath, { throws: false })
   if (!json || typeof json !== 'object') {
@@ -76,12 +77,22 @@ export function getProjectDeps(projectName: string) {
     process.exit(1)
   }
   const deps = json['dependencies'] ?? {}
-  return {
-    monoDependencies: Object.keys(deps)
-      .filter((e) => e.startsWith('@mono/'))
-      .map((str) => str.replace(`@mono/`, '')),
-    thiryDependencies: Object.entries(deps)
-      .filter(([k]) => !k.startsWith('@mono/'))
-      .asObject(([a]) => a, ([, b]) => String(b).valueOf())
+  return Object.entries(deps)
+    .filter(([k]) => !k.startsWith('@mono/'))
+    .asObject(([a]) => a, ([, b]) => String(b).valueOf())
+}
+
+export function getProjectMonoDeepDeps(projectName: string): string[] {
+  const filePath = path.resolve(getProjectRoot(projectName, 'package.json'))
+  const json = fse.readJsonSync(filePath, { throws: false })
+  if (!json || typeof json !== 'object') {
+    console.error(`'${filePath}' not exists or is not a valid json`)
+    process.exit(1)
   }
+  const deps = json['dependencies'] ?? {}
+  return Object.keys(deps)
+    .filter((e) => e.startsWith('@mono/'))
+    .map((str) => str.replace(`@mono/`, ''))
+    .flatMap((projectName) => getProjectMonoDeepDeps(projectName).concat(projectName))
+    .dedup((v) => v)
 }
