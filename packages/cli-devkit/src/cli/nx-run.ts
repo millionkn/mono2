@@ -1,6 +1,7 @@
 import { CAC } from "cac";
 import { getCwdProjectName, getProjectEnv } from "../getProject";
 import { execaCommand } from "execa";
+import { Env_SkipBuild } from "../tools";
 
 export function nxRunWrapper() {
   return (cac: CAC) => cac
@@ -20,8 +21,11 @@ export function nxRunWrapper() {
       }
       const mode = options.mode || ``
       const configuration = !mode ? '' : `--configuration=${mode}`
-      const child = execaCommand(`pnpm exec nx ${configuration} ${taskName} ${projectName}`, {
-        env: getProjectEnv(projectName, mode),
+      const child = execaCommand(`nx ${configuration} ${taskName} ${projectName}`, {
+        env: {
+          [Env_SkipBuild]: 'true',
+          ...getProjectEnv(projectName, mode)
+        },
         stdio: 'inherit',
       })
       child.catch(() => { }).finally(() => {

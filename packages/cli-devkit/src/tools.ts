@@ -33,3 +33,5 @@ export const workspaceRoot = import.meta.url
   .pipe((str) => fileURLToPath(str))
   .pipe((str) => path.resolve(str, '../../../..'))
   .pipe((str) => normalizePath(str))
+
+export const Env_SkipBuild = 'Mono_Cli_Devkit'

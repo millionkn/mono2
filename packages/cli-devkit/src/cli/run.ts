@@ -1,5 +1,5 @@
 import { CAC } from "cac";
-import { esmCommand } from "../tools";
+import { Env_SkipBuild, esmCommand } from "../tools";
 import { execaCommand } from 'execa'
 import fse from "fs-extra";
 
@@ -15,6 +15,9 @@ export function runWrapper() {
       }
       const child = execaCommand([esmCommand(scriptPath), ...options["--"]].join(' '), {
         stdio: 'inherit',
+        env: {
+          [Env_SkipBuild]: 'true',
+        },
       })
       await child.catch(() => { })
       const exitCode = child.exitCode

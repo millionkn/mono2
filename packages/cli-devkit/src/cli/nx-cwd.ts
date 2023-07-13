@@ -2,6 +2,7 @@ import { CAC } from "cac";
 import { execaCommand } from "execa";
 import { env } from "process";
 import { getProjectRoot } from "../getProject";
+import { Env_SkipBuild } from "../tools";
 
 export function nxCwdWrapper() {
   return (cac: CAC) => cac
@@ -15,6 +16,9 @@ export function nxCwdWrapper() {
       const child = execaCommand(process.argv.slice(3).join(' '), {
         cwd: getProjectRoot(projectName),
         stdio: 'inherit',
+        env: {
+          [Env_SkipBuild]: 'true',
+        }
       })
       child.catch(() => { }).finally(() => {
         const exitCode = child.exitCode

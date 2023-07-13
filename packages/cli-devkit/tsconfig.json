@@ -4,8 +4,6 @@
     "target": "ESNext",
     "allowJs": true,
     "moduleResolution": "Bundler",
-    "noEmit": true,
-    "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "removeComments": true,

@@ -5,7 +5,7 @@
   "description": "",
   "type": "module",
   "bin": {
-    "mono": "./src/entry/index.js"
+    "mono": "./entry/index.js"
   },
   "keywords": [],
   "author": "",
