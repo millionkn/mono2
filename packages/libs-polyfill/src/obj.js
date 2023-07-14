@@ -1,11 +1,25 @@
 export { }
 
-const r = {}
+const createItem = () => ({
+  saved: null,
+  next: new Map()
+})
 
-Object.lazy = (fun) => {
-  let cache = r
-  return () => {
-    if (cache !== r) { return cache }
-    return cache = fun()
+Object.lazyInitializer = (f) => {
+  const root = createItem()
+  return (...args) => {
+    const target = args.reduce((pre, cur) => {
+      if (!pre.next.has(cur)) { pre.next.set(cur, createItem()) }
+      return pre.next.get(cur)
+    }, root)
+    if (target.saved === null) {
+      target.saved = { value: f(...args) }
+    }
+    return target.saved.value
   }
+}
+
+Object.lazy = (f) => {
+  const initializer = Object.lazyInitializer(f)
+  return initializer
 }

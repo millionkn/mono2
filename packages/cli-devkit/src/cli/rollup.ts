@@ -1,7 +1,6 @@
 import { CAC } from "cac";
-import { getCwdProjectName, getProjectRoot } from "../getProject";
-import { rollupOnly } from "../rollupProject";
-import { globSync } from "glob";
+import { getCwdProjectName } from "../getProject";
+import { rollupProject } from "../rollupProject";
 import ora from "ora";
 
 export function rollupWrapper() {
@@ -13,11 +12,8 @@ export function rollupWrapper() {
         console.error(`cwd not in project,please set a project`)
         process.exit(1)
       }
-      const input = globSync([
-        'ts', 'tsx', 'js', 'jsx',
-      ].map((suffix) => getProjectRoot(projectName, `src/**/*.${suffix}`)))
       const spinner = ora(`build project '${projectName}'`).start();
-      await rollupOnly(projectName, input).then(() => {
+      await rollupProject(projectName).then(() => {
         spinner.succeed('build complate')
         process.exit(0)
       }).catch((e) => {

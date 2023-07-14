@@ -4,17 +4,19 @@ import typescript from 'typescript';
 import { cwd } from "process";
 import { useImportDefault } from "./tools";
 import { getProjectRoot } from "./getProject";
+import { globSync } from "glob";
 
 const tscPlugin = await import('rollup-plugin-typescript2').then(useImportDefault())
 const resolvePlugin = await import('@rollup/plugin-node-resolve').then(useImportDefault())
 
-export async function rollupOnly(
+export async function rollupProject(
   projectName: string,
-  input: string[],
 ) {
   const projectRoot = getProjectRoot(projectName);
   const rollupBuild = await rollup({
-    input,
+    input: globSync([
+      'ts', 'tsx', 'js', 'jsx',
+    ].map((suffix) => getProjectRoot(projectName, `src/**/*.${suffix}`))),
     plugins: [
       resolvePlugin({
         rootDir: projectRoot,

@@ -82,7 +82,7 @@ export function getProjectThiryDeps(projectName: string) {
     .asObject(([a]) => a, ([, b]) => String(b).valueOf())
 }
 
-export function getProjectMonoDeepDeps(projectName: string): string[] {
+export function getProjectMonoDeps(projectName: string): string[] {
   const filePath = path.resolve(getProjectRoot(projectName, 'package.json'))
   const json = fse.readJsonSync(filePath, { throws: false })
   if (!json || typeof json !== 'object') {
@@ -93,6 +93,4 @@ export function getProjectMonoDeepDeps(projectName: string): string[] {
   return Object.keys(deps)
     .filter((e) => e.startsWith('@mono/'))
     .map((str) => str.replace(`@mono/`, ''))
-    .flatMap((projectName) => getProjectMonoDeepDeps(projectName).concat(projectName))
-    .dedup((v) => v)
 }

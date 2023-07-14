@@ -19,7 +19,7 @@ try {
         rootDir: path.resolve(selfRoot),
       }),
       {
-        name: '2',
+        name: 'exclude_deps',
         async resolveId(id, importer) {
           if (!importer) { return }
           if (id.startsWith('@mono/')) {
@@ -28,12 +28,13 @@ try {
           if (id.split('\\').join('/').includes('/node_modules/')) {
             return { id, external: true }
           }
-          console.log(2, id, await this.resolve(id))
         }
       },
       tscPlugin.default({
         tsconfigOverride: {
-          rootDir: 'src',
+          compilerOptions: {
+            rootDir: 'src',
+          },
         },
         cwd: path.resolve(selfRoot),
         tsconfig: path.resolve(selfRoot, 'tsConfig.json'),
