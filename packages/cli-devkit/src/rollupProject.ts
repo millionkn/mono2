@@ -3,7 +3,7 @@ import { rollup } from "rollup";
 import typescript from 'typescript';
 import { cwd } from "process";
 import { useImportDefault } from "./tools";
-import { getProjectRoot, getProjectThiryDeps } from "./getProject";
+import { getProjectEnv, getProjectRoot, getProjectThiryDeps } from "./getProject";
 import { globSync } from "glob";
 
 const tscPlugin = await import('rollup-plugin-typescript2').then(useImportDefault())
@@ -11,7 +11,10 @@ const resolvePlugin = await import('@rollup/plugin-node-resolve').then(useImport
 
 export async function rollupProject(
   projectName: string,
+  mode: string,
 ) {
+  const projectEnv = getProjectEnv(projectName, mode)
+  if (projectEnv.Mono_Skip_Rollup === 'true') { return }
   const projectRoot = getProjectRoot(projectName);
   const deps = getProjectThiryDeps(projectName)
   const rollupBuild = await rollup({

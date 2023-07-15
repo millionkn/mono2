@@ -4,33 +4,29 @@ import { appRouter } from "./router"
 import fastify from 'fastify';
 import { exit } from 'process';
 import { serverPort } from './env';
+import cors from '@fastify/cors'
 
 export type AppRouter = typeof appRouter
 
 const server = fastify({
-  maxParamLength: 5000,
-  frameworkErrors: (err, req) => {
-    console.log(req.url, req.params, req.body, err.message)
-  },
-  logger: {
-    transport: {
-      target: 'pino-pretty',
-      options: {
-        colorize: true
-      }
-    }
-  },
+  logger: true
 });
-
+server.get(`/xxx`, async () => {
+  return 'test'
+})
+server.register(cors)
 server.register(fastifyTRPCPlugin, {
   prefix: '/trpc',
-  trpcOptions: { router: appRouter },
+  log: true,
+  trpcOptions: {
+    router: appRouter,
+  },
+
 });
-server.listen({
+await server.listen({
+  host: '0.0.0.0',
   port: serverPort,
-}, (err) => {
-  if (err) {
-    server.log.error(err)
-    exit(1)
-  }
+}).catch((err) => {
+  server.log.error(err)
+  exit(1)
 });

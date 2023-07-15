@@ -5,15 +5,15 @@ import { normalizePath, normalizeRelative, workspaceRoot } from "./tools";
 
 export function getProjectRoot(projectName: string, ...child: string[]) {
   return projectName
-    .pipe((str) => path.resolve(workspaceRoot, `packages`, str, ...child))
-    .pipe((str) => normalizePath(str))
+    .pipeValue((str) => path.resolve(workspaceRoot, `packages`, str, ...child))
+    .pipeValue((str) => normalizePath(str))
 }
 
 export function getCwdProjectName() {
   return process.cwd()
-    .pipe((str) => normalizeRelative(path.resolve(workspaceRoot, 'packages'), str))
-    .pipe((str) => str.split('/')[0])
-    .pipe((str) => str.startsWith('.') ? null : str)
+    .pipeValue((str) => normalizeRelative(path.resolve(workspaceRoot, 'packages'), str))
+    .pipeValue((str) => str.split('/')[0])
+    .pipeValue((str) => str.startsWith('.') ? null : str)
 }
 
 /**
@@ -54,7 +54,10 @@ export const getProjectEnvFileList = (projectName: string, mode: string) => {
   ].filter((str) => !!str)
 }
 
-export function getProjectEnv(projectName: string, mode: string) {
+export function getProjectEnv(projectName: string, mode: string): {
+  [key: string]: string | undefined,
+  Mono_Skip_Rollup?: string | undefined,
+} {
   return getProjectEnvFileList(projectName, mode)
     .reverse()
     .map((envFile) => {

@@ -23,6 +23,6 @@
     ],
   },
   "include": [
-    "src/cli/index.ts",
+    "src/**/*.ts",
   ],
 }

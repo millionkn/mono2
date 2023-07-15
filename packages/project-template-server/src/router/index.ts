@@ -6,7 +6,9 @@ import { Like } from 'typeorm';
 
 const dataSource = loadDataSource()
 export const appRouter = trpc.router({
-  test: trpc.procedure.input(z.string()).query((body) => {
-    return {data:789}
-  }),
+  test: trpc.procedure
+    .input(z.string())
+    .query((body) => {
+      return { echo: body.input }
+    }),
 })

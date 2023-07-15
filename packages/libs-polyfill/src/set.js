@@ -1,4 +1,10 @@
-Set.prototype.map = function (cb) {
-    return [...this].map((item, index, arr) => cb(item, index, arr));
-};
-export {};
+export { };
+Object.defineProperties(Set.prototype, {
+  map: {
+    enumerable: false,
+    value: function (cb) {
+      return [...this].map((item, index, arr) => cb(item, index, arr));
+    },
+  }
+})
+

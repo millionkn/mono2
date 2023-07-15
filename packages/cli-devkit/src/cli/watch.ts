@@ -1,7 +1,7 @@
 import { CAC } from "cac";
 import { execaCommand } from 'execa'
 import { getCwdProjectName, getProjectMonoDeps, getProjectEnv, getProjectEnvFileList, getProjectRoot } from "../getProject";
-import { Observable, combineLatest, combineLatestAll, distinctUntilChanged, from, map, of, shareReplay, startWith, switchMap, timer } from "rxjs";
+import { Observable, combineLatest, combineLatestAll, distinctUntilChanged, from, map, of, shareReplay, startWith, switchMap, tap, timer } from "rxjs";
 import ansiEscapes from "ansi-escapes";
 import ora from "ora";
 import colors from 'picocolors'
@@ -13,6 +13,7 @@ export function watchWrapper() {
   return (cac: CAC) => cac
     .command('watch [projectName]', `run a esm script`)
     .option(`--debug`, `with '--inspect' flag`)
+    .option(`--exclude [...projectNames]`, `watch with out project`)
     .option('--mode <mode>', `if set,will load '.env.[mode]' or '.env.[mode].local'`)
     .action((rawProjectName: string | undefined, options: {
       mode: string | undefined,
@@ -36,7 +37,9 @@ export function watchWrapper() {
       }
       const format = (str: string, clear = true) => `${!clear ? '' : ansiEscapes.clearScreen}${colors.green(`[${dayjs().format('HH:mm:ss')}]`)} ${str}`
       const getOb$ = Object.lazyInitializer((projectName: string): Observable<WatcherState> => {
+        let lastBuildDate = new Date()
         const fileChange$ = new Observable<{ changeDate: Date }>((subscriber) => {
+          subscriber.next({ changeDate: lastBuildDate })
           const srcWatcher = globWatch(['ts', 'tsx', 'js', 'jsx'].map((suffix) => getProjectRoot(projectName, `src/**/*.${suffix}`)))
           srcWatcher.on('change', () => subscriber.next({ changeDate: new Date() }))
           return () => srcWatcher.close()
@@ -44,6 +47,7 @@ export function watchWrapper() {
         const depsState$ = from(getProjectMonoDeps(projectName)).pipe(
           map((p) => getOb$(p)),
           combineLatestAll(),
+          startWith([]),
           map((stateArr): WatcherState => {
             const err = stateArr.find((v) => v.state === 'error')
             if (err?.state === 'error') { return err }
@@ -52,21 +56,21 @@ export function watchWrapper() {
             return { state: 'complate' }
           }),
         )
-        let lastBuild = new Date()
+
         return combineLatest([depsState$, fileChange$]).pipe(
           switchMap(([deps, { changeDate }]) => {
             if (deps.state !== 'complate') { return of(deps) }
-            if (changeDate.valueOf() <= lastBuild.valueOf()) {
+            if (changeDate.valueOf() <= lastBuildDate.valueOf()) {
               return of<WatcherState>({ state: 'complate' })
             }
             return timer(200).pipe(
-              switchMap(() => rollupProject(projectName)
+              switchMap(() => rollupProject(projectName, options.mode ?? '')
                 .then((): WatcherState => ({ state: 'complate' }))
                 .catch((e): WatcherState => ({
                   state: 'error',
                   msg: e instanceof Error ? e.message : String(e),
                 }))
-                .finally(() => lastBuild = changeDate)
+                .finally(() => lastBuildDate = changeDate)
               ),
               startWith<WatcherState>({ state: 'building', changeDate, projectName })
             )

@@ -1,4 +1,4 @@
-import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
+import { createTRPCProxyClient, httpBatchLink, httpLink } from '@trpc/client';
 import { AppRouter } from '@mono/project-template-server';
 
 export function baseUrl(str: string) {
@@ -7,9 +7,8 @@ export function baseUrl(str: string) {
 
 export const client = createTRPCProxyClient({
   links: [
-    httpBatchLink<AppRouter>({
-      maxURLLength: 5000,
-      url: baseUrl('api/trpc'),
+    httpLink<AppRouter>({
+      url: `http://localhost:3000/trpc`,
     }),
   ],
 });

@@ -9,8 +9,8 @@ const isWindows = platform() === 'win32'
 
 export function normalizeRelative(from: string, to: string) {
   return path.relative(from, to)
-    .pipe((str) => isWindows ? str.replaceAll('\\', '/') : str)
-    .pipe((str) => posix.normalize(str))
+    .pipeValue((str) => isWindows ? str.replaceAll('\\', '/') : str)
+    .pipeValue((str) => posix.normalize(str))
 }
 
 export function normalizePath(pathStr: string) {
@@ -19,8 +19,8 @@ export function normalizePath(pathStr: string) {
 
 export function esmCommand(scriptPath: string) {
   return scriptPath
-    .pipe((str) => normalizePath(str))
-    .pipe((scriptPath) => `ts-node-esm --experimentalSpecifierResolution node -T --swc ${scriptPath}`)
+    .pipeValue((str) => normalizePath(str))
+    .pipeValue((scriptPath) => `ts-node-esm --experimentalSpecifierResolution node -T --swc ${scriptPath}`)
 }
 
 export function useImportDefault() {
@@ -30,8 +30,8 @@ export function useImportDefault() {
 }
 
 export const workspaceRoot = import.meta.url
-  .pipe((str) => fileURLToPath(str))
-  .pipe((str) => path.resolve(str, '../../../..'))
-  .pipe((str) => normalizePath(str))
+  .pipeValue((str) => fileURLToPath(str))
+  .pipeValue((str) => path.resolve(str, '../../../..'))
+  .pipeValue((str) => normalizePath(str))
 
 export const Env_SkipBuild = 'Mono_Cli_Devkit'
