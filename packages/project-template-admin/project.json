@@ -3,7 +3,7 @@
     "tsc-check": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "pnpm exec mono nx-cwd tsc --noEmit"
+        "command": "pnpm exec mono nx-cwd \"tsc --noEmit\""
       }
     },
     "pre-build": {
@@ -18,7 +18,7 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "pnpm exec mono nx-cwd vite build"
+        "command": "pnpm exec mono nx-cwd \"vite build\""
       }
     }
   }

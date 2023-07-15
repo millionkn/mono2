@@ -6,14 +6,14 @@ import { Env_SkipBuild } from "../tools";
 
 export function nxCwdWrapper() {
   return (cac: CAC) => cac
-    .command('nx-cwd', `run commands in cwd:'packages/[NX_TASK_TARGET_PROJECT]'`)
-    .action(() => {
+    .command('nx-cwd [command]', `run command in cwd:'packages/[NX_TASK_TARGET_PROJECT]'`)
+    .action((command) => {
       const projectName = env['NX_TASK_TARGET_PROJECT']
       if (!projectName) {
         console.error(`not found env 'NX_TASK_TARGET_PROJECT',without nx?`)
         process.exit(1)
       }
-      const child = execaCommand(process.argv.slice(3).join(' '), {
+      const child = execaCommand(command, {
         cwd: getProjectRoot(projectName),
         stdio: 'inherit',
         env: {

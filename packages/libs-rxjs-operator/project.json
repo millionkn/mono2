@@ -3,7 +3,7 @@
     "pre-build":{
       "executor": "nx:run-commands",
       "options": {
-        "command": "pnpm exec mono nx-cwd pnpm exec mono rollup"
+        "command": "pnpm exec mono nx-cwd \"pnpm exec mono rollup\""
       }
     }
   }

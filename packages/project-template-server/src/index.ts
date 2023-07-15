@@ -10,7 +10,6 @@ export type AppRouter = typeof appRouter
 const server = fastify({
   maxParamLength: 5000,
   frameworkErrors: (err, req) => {
-    
     console.log(req.url, req.params, req.body, err.message)
   },
   logger: {
