@@ -26,6 +26,7 @@
     "@fastify/websocket": "^8.2.0",
     "@mono/libs-polyfill": "workspace:^",
     "@mono/libs-rxjs-operator": "workspace:^",
+    "@mono/libs-socketio-trpc": "workspace:^",
     "@mono/libs-utils": "workspace:^",
     "@trpc/server": "^10.31.0",
     "dayjs": "^1.11.8",

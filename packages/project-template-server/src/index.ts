@@ -6,7 +6,7 @@ import { serverPort } from './env';
 import cors from '@fastify/cors'
 import { Server } from 'socket.io'
 import fp from 'fastify-plugin'
-import { applyWSSHandler } from '@trpc/server/adapters/ws';
+import { attachOnServer } from '@mono/libs-socketio-trpc'
 
 export type AppRouter = typeof appRouter
 
@@ -22,23 +22,18 @@ const fastifyInstance = fastify({
   },
 });
 
+fastifyInstance.register(cors)
 fastifyInstance.register(fp(async (instance) => {
-  //@ts-ignore
   const io = new Server({
     path: "/trpc/socket.io",
-    cors: { origin: '*' },
   })
-  io.attach(instance.server)
-  applyWSSHandler({
-    wss: io,
+  attachOnServer({
+    io, 
+    httpServer: instance.server, 
     router: appRouter,
-    createContext:()=>{
-
-    }
-  });
+  })
   instance.addHook('onClose', (_, done) => io.close((err) => done(err)))
 }));
-fastifyInstance.register(cors)
 
 await fastifyInstance.listen({
   host: '0.0.0.0',

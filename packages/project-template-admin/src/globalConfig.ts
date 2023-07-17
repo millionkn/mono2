@@ -1,21 +1,31 @@
 import { createTRPCProxyClient } from '@trpc/client';
 import { io } from 'socket.io-client';
 import { AppRouter } from '@mono/project-template-server'
+import { clientLink } from '@mono/libs-socketio-trpc'
+import { of } from 'rxjs';
 
 export function baseUrl(str: string) {
-  return '/' + `${import.meta.env.BASE_URL}/${str}`.split('/').filter((x) => x.length !== 0).join('/')
+  return '/' + `${import.meta.env.VITE_Base_Url}/${str}`.split('/').filter((x) => x.length !== 0).join('/')
 }
 
-export const socket: ReturnType<typeof io> = io('127.0.0.1:3000', {
-  path: '/trpc/socket.io' || baseUrl(`/api/`),
-})
+const socket: ReturnType<typeof io> = import.meta.env.VITE_Server_Host
+  .isOneOf(['', '/'])
+  .pipeValue((v) => {
+    if (v) {
+      return io({
+        path: baseUrl(`/api/trpc/socket.io`),
+      })
+    } else {
+      return io(import.meta.env.VITE_Server_Host, {
+        path: baseUrl(`/api/trpc/socket.io`),
+      })
+    }
+  })
 
-
-
-export const client = createTRPCProxyClient<AppRouter>({
+export const client: ReturnType<typeof createTRPCProxyClient<AppRouter>> = createTRPCProxyClient<AppRouter>({
   links: [
-    socketioLink({
-      instance: socket,
+    clientLink({
+      client$: of(socket),
     }),
   ],
 });

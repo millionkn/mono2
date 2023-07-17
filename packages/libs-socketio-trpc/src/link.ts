@@ -1,7 +1,12 @@
+import { Server } from "socket.io";
+import { Server as HttpServer } from 'http'
+import { Http2SecureServer } from 'http2'
+import { Server as HttpsServer } from 'https'
+import { applyWSSHandler } from '@trpc/server/adapters/ws';
+import { AnyRouter } from "@trpc/server"
 import { TRPCLink, TRPCClientError } from '@trpc/client';
 import { io } from 'socket.io-client';
 import { observable } from '@trpc/server/observable';
-import { AnyRouter } from '@trpc/server'
 import { Observable, from, switchMap } from 'rxjs';
 import { keepShare } from '@mono/libs-rxjs-operator'
 
@@ -21,7 +26,7 @@ export const clientLink = <Router extends AnyRouter>(opt: {
   return (runtime) => {
     return (opts) => {
       const input = runtime.transformer.serialize(opts.op.input);
-      const { type, path, id, context } = opts.op;
+      const { type, path, id } = opts.op;
       if (type !== 'query' && type !== 'mutation' && type !== 'subscription') {
         throw new Error(`unknown op type:'${type}'`)
       }
@@ -34,15 +39,32 @@ export const clientLink = <Router extends AnyRouter>(opt: {
                   throw new Error(`socket reset,but ${type} '${path}' is not complate`)
                 }
                 return new Observable<any>((subscriber) => {
-                  const msgCb = (msg: any) => {
+                  const msgCb = (msgStr: string) => {
+                    if (typeof msgStr !== 'string') {
+                      return subscriber.error(
+                        new Error(`server response invalid,get ${msgStr}`)
+                      )
+                    }
+                    let msg: any = null
+                    try {
+                      msg = JSON.parse(msgStr)
+                    } catch (e) {
+                      return subscriber.error(
+                        new Error(`server response invalid(parse json),get ${msgStr}`)
+                      )
+                    }
+                    if (typeof msg !== 'object' || msg === null || msg instanceof Array) {
+                      return subscriber.error(
+                        new Error(`server response invalid,get ${msgStr}`)
+                      )
+                    }
                     if (msg.type === 'reconnect' && msg.id === null) {
                       return subscriber.error(
                         new Error(`server send a 'reconnect' message,but ${type} is not complate`)
                       )
                     }
                     if (msg?.id !== id) { return }
-                    const result = msg['result']
-                    subscriber.next(result.data)
+                    subscriber.next(msg)
                     subscriber.complete()
                   }
                   socket.on('message', msgCb)
@@ -56,7 +78,6 @@ export const clientLink = <Router extends AnyRouter>(opt: {
                   }))
                   return () => socket.off('message', msgCb)
                 })
-
               })
             )
           } else {
@@ -64,7 +85,25 @@ export const clientLink = <Router extends AnyRouter>(opt: {
               switchMap((socket) => {
                 if (socket === null) { return from([]) }
                 return new Observable<any>((subscriber) => {
-                  const msgCb = (msg: any) => {
+                  const msgCb = (msgStr: any) => {
+                    if (typeof msgStr !== 'string') {
+                      return subscriber.error(
+                        new Error(`server response invalid,get ${msgStr}`)
+                      )
+                    }
+                    let msg: any = null
+                    try {
+                      msg = JSON.parse(msgStr)
+                    } catch (e) {
+                      return subscriber.error(
+                        new Error(`server response invalid(parse json),get ${msgStr}`)
+                      )
+                    }
+                    if (typeof msg !== 'object' || msg === null || msg instanceof Array) {
+                      return subscriber.error(
+                        new Error(`server response invalid,get ${msgStr}`)
+                      )
+                    }
                     if (msg.type === 'reconnect' && msg.id === null) { return }
                     if (msg?.id !== id) { return }
                     const result = msg['result']
@@ -73,7 +112,7 @@ export const clientLink = <Router extends AnyRouter>(opt: {
                       return subscriber.complete()
                     }
                     if (result.type === 'data') {
-                      subscriber.next(result.data)
+                      subscriber.next(msg)
                     }
                   }
                   socket.on('message', msgCb)
@@ -105,4 +144,19 @@ export const clientLink = <Router extends AnyRouter>(opt: {
       })
     }
   }
+}
+
+export function attachOnServer<TRouter extends AnyRouter>(opts: {
+  io: Server,
+  httpServer: HttpServer | HttpsServer | Http2SecureServer,
+  router: TRouter,
+}) {
+  opts.io.attach(opts.httpServer, {
+    //@ts-ignore
+    cors: { origin: '*' },
+  })
+  applyWSSHandler({
+    router: opts.router,
+    wss: opts.io,
+  })
 }

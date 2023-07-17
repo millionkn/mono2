@@ -1,2 +1,1 @@
-export * from './client'
-export * from './servet'
+export * from './link'

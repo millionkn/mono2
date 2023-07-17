@@ -5,7 +5,13 @@ import { client } from './globalConfig'
 export const App: React.FC = () => {
   const [count, setCount] = useState(0)
   useEffect(() => {
-    client.test.query('999999')
+    const x = client.test.subscribe('999999', {
+      onData:(v)=>{
+        console.log(v)
+      }
+    })
+    return ()=>x.unsubscribe()
+
   }, [])
   return (<>
     <Button onClick={() => setCount(count + 1)}>{count}</Button>
