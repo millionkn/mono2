@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ESNext",
+    "rootDir": "src",
+    "outDir": "dist",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "removeComments": true,
+    "esModuleInterop": false,
+    "alwaysStrict": true,
+    "strict": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "lib": [
+      "ESNext"
+    ],
+    "types": [],
+  },
+  "include": [
+    "src/**/*.ts",
+  ]
+}

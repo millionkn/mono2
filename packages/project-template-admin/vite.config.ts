@@ -12,7 +12,7 @@ export default defineConfig({
   },
   logLevel: 'info',
   server: {
-    port: 4001,
+    port: 4000,
     host: true,
     proxy: {
       '/template-admin/api': {

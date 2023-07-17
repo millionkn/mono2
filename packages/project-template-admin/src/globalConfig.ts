@@ -1,15 +1,21 @@
-import { createTRPCProxyClient, httpBatchLink, httpLink } from '@trpc/client';
-import { AppRouter } from '@mono/project-template-server';
+import { createTRPCProxyClient } from '@trpc/client';
 import { io } from 'socket.io-client';
+import { AppRouter } from '@mono/project-template-server'
 
 export function baseUrl(str: string) {
   return '/' + `${import.meta.env.BASE_URL}/${str}`.split('/').filter((x) => x.length !== 0).join('/')
 }
 
-export const client = createTRPCProxyClient({
+export const socket: ReturnType<typeof io> = io('127.0.0.1:3000', {
+  path: '/trpc/socket.io' || baseUrl(`/api/`),
+})
+
+
+
+export const client = createTRPCProxyClient<AppRouter>({
   links: [
-    httpLink<AppRouter>({
-      url: `http://localhost:3000/trpc`,
+    socketioLink({
+      instance: socket,
     }),
   ],
 });

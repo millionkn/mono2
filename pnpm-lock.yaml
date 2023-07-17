@@ -92,6 +92,27 @@ importers:
         specifier: ^7.8.1
         version: 7.8.1
 
+  packages/libs-socketio-trpc:
+    dependencies:
+      '@mono/libs-rxjs-operator':
+        specifier: workspace:^
+        version: link:../libs-rxjs-operator
+      '@trpc/client':
+        specifier: ^10.31.0
+        version: 10.31.0(@trpc/server@10.31.0)
+      '@trpc/server':
+        specifier: ^10.31.0
+        version: 10.31.0
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.1
+      socket.io:
+        specifier: ^4.7.1
+        version: 4.7.1
+      socket.io-client:
+        specifier: ^4.7.1
+        version: 4.7.1
+
   packages/libs-sql-scope:
     dependencies:
       '@mono/libs-polyfill':
@@ -114,6 +135,9 @@ importers:
       '@trpc/client':
         specifier: ^10.31.0
         version: 10.31.0(@trpc/server@10.31.0)
+      '@trpc/server':
+        specifier: ^10.31.0
+        version: 10.31.0
       antd:
         specifier: ^5.6.2
         version: 5.6.2(react-dom@18.2.0)(react@18.2.0)
@@ -172,6 +196,9 @@ importers:
       '@fastify/cors':
         specifier: ^8.3.0
         version: 8.3.0
+      '@fastify/websocket':
+        specifier: ^8.2.0
+        version: 8.2.0
       '@mono/libs-polyfill':
         specifier: workspace:^
         version: link:../libs-polyfill
@@ -190,6 +217,9 @@ importers:
       fastify:
         specifier: ^4.19.2
         version: 4.19.2
+      fastify-plugin:
+        specifier: ^4.5.0
+        version: 4.5.0
       fastify-socket.io:
         specifier: ^4.0.0
         version: 4.0.0(socket.io@4.7.1)
@@ -205,6 +235,9 @@ importers:
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
+      socket.io:
+        specifier: ^4.7.1
+        version: 4.7.1
       typeorm:
         specifier: ^0.3.17
         version: 0.3.17(mysql2@3.5.1)(pg@8.11.1)(ts-node@10.9.1)
@@ -786,6 +819,16 @@ packages:
     resolution: {integrity: sha512-aZAXGYo6m22Fk1zZzEUKBvut/CIIQe/BapEORnxiD5Qr0kPHqqI69NtEMCme74h+at72sPhbkb4ZrLd1W3KRLA==}
     dependencies:
       fast-json-stringify: 5.7.0
+    dev: false
+
+  /@fastify/websocket@8.2.0:
+    resolution: {integrity: sha512-B4tlHFBKCX7tenEG9aUcQEpksW2e0+dgRTaH/05+cro1Xsq1+kSj+9IB9Gep7a0KbHZGrat+zBsOas6lRs5dFQ==}
+    dependencies:
+      fastify-plugin: 4.5.0
+      ws: 8.11.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
     dev: false
 
   /@humanwhocodes/config-array@0.11.10:
