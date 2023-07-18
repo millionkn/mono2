@@ -1,5 +1,5 @@
 import '@mono/libs-polyfill';
-import { appRouter } from "./router"
+import { appRouter } from "./router/app.router"
 import fastify from 'fastify';
 import { exit } from 'process';
 import { serverPort } from './env';
@@ -7,6 +7,7 @@ import cors from '@fastify/cors'
 import { Server } from 'socket.io'
 import fp from 'fastify-plugin'
 import { attachOnServer } from '@mono/libs-socketio-trpc'
+import { createContext } from './const';
 
 export type AppRouter = typeof appRouter
 
@@ -28,9 +29,10 @@ fastifyInstance.register(fp(async (instance) => {
     path: "/trpc/socket.io",
   })
   attachOnServer({
-    io, 
-    httpServer: instance.server, 
+    io,
+    httpServer: instance.server,
     router: appRouter,
+    createContext: createContext,
   })
   instance.addHook('onClose', (_, done) => io.close((err) => done(err)))
 }));

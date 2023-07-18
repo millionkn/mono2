@@ -1,31 +1,27 @@
-import { createTRPCProxyClient } from '@trpc/client';
-import { io } from 'socket.io-client';
+import { CreateTRPCProxyClient, createTRPCProxyClient } from '@trpc/client';
+import { Socket, io } from 'socket.io-client';
 import { AppRouter } from '@mono/project-template-server'
 import { clientLink } from '@mono/libs-socketio-trpc'
-import { of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { keepReplay } from '@mono/libs-rxjs-operator';
+import { baseUrl } from './tools/baseUrl';
 
-export function baseUrl(str: string) {
-  return '/' + `${import.meta.env.VITE_Base_Url}/${str}`.split('/').filter((x) => x.length !== 0).join('/')
-}
-
-const socket: ReturnType<typeof io> = import.meta.env.VITE_Server_Host
+const socket$ = import.meta.env.VITE_Server_Host
   .isOneOf(['', '/'])
   .pipeValue((v) => {
-    if (v) {
-      return io({
-        path: baseUrl(`/api/trpc/socket.io`),
-      })
-    } else {
-      return io(import.meta.env.VITE_Server_Host, {
-        path: baseUrl(`/api/trpc/socket.io`),
-      })
-    }
+    const path = baseUrl(import.meta.env.VITE_Api, `/trpc/socket.io`)
+    return new Observable<Socket | null>((subscriber) => {
+      const client = v ? io({ path }) : io(import.meta.env.VITE_Server_Host, { path })
+      client.on('connect', () => subscriber.next(client))
+      client.on('disconnect', () => subscriber.next(null))
+      return () => client.disconnect()
+    }).pipe(keepReplay(2000))
   })
 
-export const client: ReturnType<typeof createTRPCProxyClient<AppRouter>> = createTRPCProxyClient<AppRouter>({
+export const trpcClient: CreateTRPCProxyClient<AppRouter> = createTRPCProxyClient<AppRouter>({
   links: [
     clientLink({
-      client$: of(socket),
+      socket$
     }),
   ],
 });

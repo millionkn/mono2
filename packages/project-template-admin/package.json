@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@mono/libs-polyfill": "workspace:^",
+    "@mono/libs-rxjs-operator": "workspace:^",
     "@mono/libs-socketio-trpc": "workspace:^",
     "@mono/libs-utils": "workspace:^",
     "@trpc/client": "^10.31.0",

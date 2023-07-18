@@ -129,6 +129,9 @@ importers:
       '@mono/libs-polyfill':
         specifier: workspace:^
         version: link:../libs-polyfill
+      '@mono/libs-rxjs-operator':
+        specifier: workspace:^
+        version: link:../libs-rxjs-operator
       '@mono/libs-socketio-trpc':
         specifier: workspace:^
         version: link:../libs-socketio-trpc
