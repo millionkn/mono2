@@ -1,71 +1,59 @@
-import { Server, Socket } from "socket.io";
+import { Server, Socket as ServerSocket } from "socket.io";
 import { Server as HttpServer } from 'http'
 import { Http2SecureServer } from 'http2'
 import { Server as HttpsServer } from 'https'
 import { parseMessage } from '@trpc/server/adapters/ws';
 import { AnyRouter, MaybePromise, TRPCError, callProcedure, getTRPCErrorFromUnknown, inferRouterContext } from "@trpc/server"
 import { TRPCLink } from '@trpc/client';
-import { io } from 'socket.io-client';
-import { Observable, from, switchMap } from 'rxjs';
+import { Socket as ClientSocket } from 'socket.io-client';
+import { Observable, OperatorFunction, switchMap } from 'rxjs';
 import { fromRxjs } from "./tools";
 import { Unsubscribable, isObservable } from "@trpc/server/observable";
 import { JSONRPC2, TRPCClientOutgoingMessage, TRPCResponseMessage } from "@trpc/server/rpc";
 import { getErrorShape, transformTRPCResponse } from "@trpc/server/shared";
 
-type SocketClient = ReturnType<typeof io>
-
-export const clientLink = <Router extends AnyRouter>(opt: {
-  socket$: Observable<SocketClient | null>,
+export const ioLink = <Router extends AnyRouter>(opts: {
+  socket$: Observable<ClientSocket | null>,
+  dataPipe?: OperatorFunction<{ [key: string]: any }, { [key: string]: any }>,
 }): TRPCLink<Router> => {
   return (runtime) => {
-    return (opts) => {
-      const input = runtime.transformer.serialize(opts.op.input);
-      const { type, path, id } = opts.op;
+    return ({ op }) => {
+      const input = runtime.transformer.serialize(op.input);
+      const { type, path, id } = op;
       if (type !== 'query' && type !== 'mutation' && type !== 'subscription') {
         throw new Error(`unknown op type:'${type}'`)
       }
-      return fromRxjs(() => opt.socket$.pipe((ob$) => {
-        if (type === 'mutation' || type === 'query') {
-          return ob$.pipe(
-            switchMap((socket) => {
-              if (socket === null) {
-                throw new Error(`socket is closed when ${type} '${path}' is not complate`)
-              }
-              return new Observable<any>((subscriber) => {
-                const msgCb = async (msg: any) => {
-                  if ('error' in msg) {
-                    subscriber.error(msg)
-                  } else {
-                    subscriber.next(msg)
-                    subscriber.complete()
-                  }
-                }
-                socket.on('message', msgCb)
-                socket.send({
-                  id,
-                  method: type,
-                  params: {
-                    path,
-                    input,
-                  }
+      return fromRxjs(() => opts.socket$.pipe((ob$) => {
+        return ob$.pipe(
+          switchMap((socket) => {
+            if (socket === null) {
+              throw new Error(`socket is closed when ${type} '${path}' is not complate`)
+            }
+            return new Observable<any>((subscriber) => {
+              const msgCb = (msg: any) => { subscriber.next(msg) }
+              socket.on('message', msgCb)
+              return () => socket.off('message', msgCb)
+            }).pipe(
+              (ob$) => opts.dataPipe?.(ob$) ?? ob$,
+              (ob$) => new Observable<any>((subscriber) => {
+                const subscribtion = ob$.subscribe({
+                  error: (err) => subscriber.error(err),
+                  complete: () => subscriber.complete(),
+                  next: (msg) => {
+                    if (typeof msg !== 'object' && msg === null) {
+                      subscriber.error(`received invalid message,expected object,reverse "${msg}"`)
+                    }
+                    if (msg['id'] !== id) { return }
+                    if ('error' in msg) {
+                      subscriber.error(msg)
+                    } else {
+                      subscriber.next(msg)
+                      if (type !== 'subscription') {
+                        subscriber.complete()
+                      }
+                    }
+                  },
                 })
-                return () => socket.off('message', msgCb)
-              })
-            })
-          )
-        } else {
-          return ob$.pipe(
-            switchMap((socket) => {
-              if (socket === null) { return from([]) }
-              return new Observable<any>((subscriber) => {
-                const msgCb = async (msg: any) => {
-                  if ('error' in msg) {
-                    subscriber.error(msg)
-                  } else {
-                    subscriber.next(msg)
-                  }
-                }
-                socket.on('message', msgCb)
                 socket.send({
                   id,
                   method: type,
@@ -75,13 +63,15 @@ export const clientLink = <Router extends AnyRouter>(opt: {
                   }
                 })
                 return () => {
-                  socket.send({ id, method: 'subscription.stop' })
-                  socket.off('message', msgCb)
+                  if (type === 'subscription') {
+                    socket.send({ id, method: 'subscription.stop' })
+                  }
+                  subscribtion.unsubscribe()
                 }
-              })
-            })
-          )
-        }
+              }),
+            )
+          }),
+        )
       }))
     }
   }
@@ -94,12 +84,12 @@ export function attachOnServer<TRouter extends AnyRouter>(opts: {
     type: "subscription" | "query" | "mutation" | "unknown";
     ctx: inferRouterContext<TRouter> | undefined;
     input: unknown;
-    client: Socket;
+    client: ServerSocket;
   }) => void;
   io: Server,
   httpServer: HttpServer | HttpsServer | Http2SecureServer,
   router: TRouter,
-  createContext?: (socket: Socket) => MaybePromise<inferRouterContext<TRouter>>
+  createContext?: (socket: ServerSocket) => MaybePromise<inferRouterContext<TRouter>>
 }) {
   opts.io.attach(opts.httpServer, {
     //@ts-ignore
