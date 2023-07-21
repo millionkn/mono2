@@ -11,7 +11,7 @@ import { rollupProject } from "../rollupProject";
 
 export function watchWrapper() {
   return (cac: CAC) => cac
-    .command('watch [projectName]', `run a esm script`)
+    .command('watch [projectName]', `start and watch project`)
     .option(`--debug`, `with '--inspect' flag`)
     .option(`--exclude [...projectNames]`, `watch with out project`)
     .option('--mode <mode>', `if set,will load '.env.[mode]' or '.env.[mode].local'`)
