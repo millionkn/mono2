@@ -36,6 +36,7 @@ export async function rollupProject(
       },
       tscPlugin({
         cwd: cwd(),
+        clean: true,
         tsconfig: path.resolve(projectRoot, 'tsConfig.json'),
         typescript,
       }),
